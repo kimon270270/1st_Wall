@@ -18,18 +18,26 @@ excluded_dirs = [
     "C:\\Windows\\Inf",
 ]
 
+def add_excluded_dirs():
+    for path in excluded_dirs:
+        
+        for root, dirs, files in os.walk(path):
+            for d in dirs:
+                if not (os.path.join(root,d) in excluded_dirs):
+                    excluded_dirs.append(os.path.join(root,d))
+
 
 def find_exes():
-    for root, dirs, files in os.walk(r"C:\Users\anils\OneDrive\Desktop\Cyber Security"):
+    for root, dirs, files in os.walk(r"C:\\"):
         
-        for d in dirs:
-            if not (os.path.join(root,d) in excluded_dirs):
+        for f in files:
+            path = os.path.join(root,f)
+            d_path = path.split(f)
+            
+            if not (d_path in excluded_dirs):
                 
-                for f in files:
-                    if (f.endswith(".exe")):
-                        exe_files.append(os.path.join(root,f))
-                        
-    print(exe_files)
+                if (f.endswith(".exe")):
+                    exe_files.append(os.path.join(root,f))
     
     
 def compare_exes():
@@ -45,9 +53,10 @@ def compare_exes():
     for exe in exe_files:
         if not (exe in df.values):
             with open (scan_result, "a") as f:
-                f.write(f"{exe}\n")
+                f.write(f"{exe}\n\n")
 
 
 if __name__ == "__main__":
+    add_excluded_dirs()
     find_exes()
     compare_exes()
